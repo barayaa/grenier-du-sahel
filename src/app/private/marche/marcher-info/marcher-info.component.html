@@ -1,0 +1,45 @@
+<div class="market-details-container">
+    <div class="market-details-header">
+        <button nz-button nzType="default" nzSize="large" routerLink="/markets" class="back-button">
+            <i nz-icon nzType="arrow-left" nzTheme="outline"></i> Retour à la Liste
+        </button>
+    </div>
+    <div class="market-details-content" @fadeIn>
+        <ng-container *ngIf="market; else notFound">
+            <nz-card class="market-card" [nzTitle]="marketTitle">
+                <ng-template #marketTitle>
+                    <div class="card-title">
+                        <h2>{{ market.name }}</h2>
+                        <span class="card-subtitle">{{ market.locality?.parent?.parent?.parent?.name || 'Région non
+                            définie' }}</span>
+                    </div>
+                </ng-template>
+                <nz-descriptions nzBordered nzLayout="vertical" class="market-info">
+                    <nz-descriptions-item nzTitle="Localité">{{ market.locality?.name || 'Non défini'
+                        }}</nz-descriptions-item>
+                    <nz-descriptions-item nzTitle="Commune">{{ market.locality?.parent?.name || 'Non défini'
+                        }}</nz-descriptions-item>
+                    <nz-descriptions-item nzTitle="Département">{{ market.locality?.parent?.parent?.name || 'Non défini'
+                        }}</nz-descriptions-item>
+                    <nz-descriptions-item nzTitle="Coordonnées">
+                        <span class="coordinates">
+                            <i nz-icon nzType="environment" nzTheme="outline"></i>
+                            {{ market.latitude }}, {{ market.longitude }}
+                        </span>
+                    </nz-descriptions-item>
+                </nz-descriptions>
+                <div class="map-wrapper">
+                    <div leaflet [leafletOptions]="mapOptions" [leafletLayers]="markerLayers"></div>
+                </div>
+            </nz-card>
+        </ng-container>
+        <ng-template #notFound>
+            <nz-result nzStatus="404" nzTitle="Marché non trouvé" nzSubTitle="Le marché demandé n'existe pas."
+                class="not-found">
+                <div nz-result-extra>
+                    <button nz-button nzType="primary" routerLink="/markets">Retourner à la Liste</button>
+                </div>
+            </nz-result>
+        </ng-template>
+    </div>
+</div>

@@ -1,0 +1,13 @@
+nz-card {
+    border-radius: 8px;
+    background: #fff;
+
+    h3 {
+        font-size: 2rem;
+        color: #1890ff;
+    }
+
+    .text-muted {
+        font-size: 0.9rem;
+    }
+}

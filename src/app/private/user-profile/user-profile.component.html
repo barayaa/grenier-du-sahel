@@ -1,0 +1,118 @@
+<div class="container-fluid py-3 profile-types-wrapper">
+    <div class="row mb-5" @fadeIn>
+        <div class="col-md-12">
+            <nz-card class="shadow-card" nzTitle="Gestion des Types de Profils">
+                <!-- Barre de Recherche et Bouton Ajouter -->
+                <div class="mb-3">
+                    <div class="row g-3 align-items-center">
+                        <div class="col-md-6">
+                            <nz-input-group nzSearch nzSize="large">
+                                <input nz-input placeholder="Rechercher par nom de profil" [(ngModel)]="searchQuery"
+                                    (ngModelChange)="applyFilters()" />
+                            </nz-input-group>
+                        </div>
+                        <div class="col-md-6 text-end">
+                            <button nz-button nzType="primary" (click)="showAddProfileTypeModal()">
+                                <i nz-icon nzType="plus" nzTheme="outline"></i> Ajouter un Type de Profil
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tableau des Types de Profils -->
+                <nz-table #profileTypesTable [nzData]="filteredProfileTypes" nzBordered>
+                    <thead>
+                        <tr>
+                            <th>Nom du Profil</th>
+                            <th>Description</th>
+                            <th>Permissions</th>
+                            <th [width]="200">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let profileType of profileTypesTable.data">
+                            <td>{{ profileType.name }}</td>
+                            <td>{{ profileType.description }}</td>
+                            <td>
+                                <nz-tag *ngFor="let permission of profileType.permissions"
+                                    [nzColor]="permission.enabled ? 'blue' : 'default'">
+                                    {{ permission.name }}
+                                </nz-tag>
+                            </td>
+                            <td class="text-center p-2">
+                                <button class="m-r-5" (click)="showEditProfileTypeModal(profileType)" nz-button
+                                    nzType="default" nzShape="circle" nz-tooltip [nzTooltipTitle]="'Modifier'">
+                                    <i nz-icon nzType="edit" nzTheme="outline"></i>
+                                </button>
+                                <button class="m-r-5" (click)="showAssignProfileModal(profileType)" nz-button
+                                    nzType="default" nzShape="circle" nz-tooltip
+                                    [nzTooltipTitle]="'Attribuer à un Utilisateur'">
+                                    <i nz-icon nzType="user-add" nzTheme="outline"></i>
+                                </button>
+                                <button class="m-r-5" nz-button nzType="default" nzShape="circle" nz-popconfirm
+                                    nzPopconfirmTitle="Êtes-vous sûr de vouloir supprimer ce type de profil ?"
+                                    nzPopconfirmPlacement="bottom" (nzOnConfirm)="deleteProfileType(profileType)"
+                                    (nzOnCancel)="cancelDelete()" nz-tooltip [nzTooltipTitle]="'Supprimer'">
+                                    <i nz-icon nzType="delete" nzTheme="outline"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </nz-table>
+            </nz-card>
+        </div>
+    </div>
+
+    <!-- Modal pour Ajouter/Modifier un Type de Profil -->
+    <nz-modal [(nzVisible)]="isProfileTypeModalVisible"
+        [nzTitle]="isEditingProfileType ? 'Modifier le Type de Profil' : 'Ajouter un Type de Profil'"
+        (nzOnCancel)="handleProfileTypeCancel()" (nzOnOk)="handleProfileTypeOk()"
+        [nzOkDisabled]="!profileTypeForm?.valid">
+        <form nz-form #profileTypeForm="ngForm" (ngSubmit)="handleProfileTypeOk()">
+            <nz-form-item>
+                <nz-form-label nzRequired>Nom du Profil</nz-form-label>
+                <nz-form-control>
+                    <input nz-input name="name" [(ngModel)]="currentProfileType.name" required />
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label>Description</nz-form-label>
+                <nz-form-control>
+                    <textarea nz-input name="description" [(ngModel)]="currentProfileType.description"
+                        rows="4"></textarea>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label>Permissions</nz-form-label>
+                <nz-form-control>
+                    <nz-checkbox-wrapper>
+                        <div *ngFor="let permission of currentProfileType.permissions">
+                            <label nz-checkbox [(ngModel)]="permission.enabled" [ngModelOptions]="{standalone: true}">
+                                {{ permission.name }}
+                            </label>
+                        </div>
+                    </nz-checkbox-wrapper>
+                </nz-form-control>
+            </nz-form-item>
+        </form>
+    </nz-modal>
+
+    <!-- Modal pour Attribuer un Type de Profil à un Utilisateur -->
+    <nz-modal [(nzVisible)]="isAssignProfileModalVisible" nzTitle="Attribuer un Type de Profil"
+        (nzOnCancel)="handleAssignCancel()" (nzOnOk)="handleAssignOk()" [nzOkDisabled]="!selectedUser">
+        <nz-form-item>
+            <nz-form-label nzRequired>Utilisateur</nz-form-label>
+            <nz-form-control>
+                <nz-select [(ngModel)]="selectedUser" nzPlaceHolder="Sélectionner un utilisateur" style="width: 100%;">
+                    <nz-option *ngFor="let user of users" [nzValue]="user" [nzLabel]="user.name"></nz-option>
+                </nz-select>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item *ngIf="currentProfileType">
+            <nz-form-label>Type de Profil</nz-form-label>
+            <nz-form-control>
+                <input nz-input [value]="currentProfileType.name" disabled />
+            </nz-form-control>
+        </nz-form-item>
+    </nz-modal>
+</div>

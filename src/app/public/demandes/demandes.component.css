@@ -1,0 +1,33 @@
+.demand-card {
+    border-radius: 10px;
+    background: #fff;
+    transition: transform 0.2s ease-in-out;
+}
+
+.demand-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+nz-card h5 {
+    color: #2f4f4f;
+}
+
+p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #555;
+}
+
+p strong {
+    color: #1a3c34;
+}
+
+nz-tag {
+    font-size: 0.9rem;
+    padding: 4px 8px;
+}
+
+nz-button {
+    border-radius: 6px;
+}

@@ -1,0 +1,32 @@
+nz-card {
+    border-radius: 8px;
+    background: #fff;
+}
+
+.shadow-sm {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.leaflet-container {
+    height: 100%;
+    width: 100%;
+    border-radius: 8px;
+}
+
+h3 {
+    color: #1a3c34;
+}
+
+.text-muted {
+    color: #666;
+}
+
+button[nz-button] {
+    background-color: #52c41a;
+    border-color: #52c41a;
+}
+
+button[nz-button]:hover {
+    background-color: #73d13d;
+    border-color: #73d13d;
+}

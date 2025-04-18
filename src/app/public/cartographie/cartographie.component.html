@@ -1,0 +1,89 @@
+<div class="container-fluid py-4 cartographie-wrapper">
+    <h2 class="mb-4">Cartographie des Productions au Niger - Le Grenier du Sahel</h2>
+
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <nz-select [(ngModel)]="selectedProduct" (ngModelChange)="updateData()" nzPlaceHolder="Choisir un produit"
+                style="width: 100%;">
+                <nz-option nzValue="oignon" nzLabel="Oignon"></nz-option>
+                <nz-option nzValue="niebe" nzLabel="Niébé"></nz-option>
+                <nz-option nzValue="sorgho" nzLabel="Sorgho"></nz-option>
+                <nz-option nzValue="arachide" nzLabel="Arachide"></nz-option>
+            </nz-select>
+        </div>
+        <div class="col-md-6">
+            <nz-select [(ngModel)]="selectedYear" (ngModelChange)="updateData()" nzPlaceHolder="Choisir une année"
+                style="width: 100%;">
+                <nz-option nzValue="2023" nzLabel="2023"></nz-option>
+                <nz-option nzValue="2024" nzLabel="2024"></nz-option>
+                <nz-option nzValue="2025" nzLabel="2025"></nz-option>
+            </nz-select>
+        </div>
+    </div>
+
+
+    <div class="row mb-4">
+
+        <div class="col-md-6">
+            <nz-card class="shadow-card" nzTitle="Évolution de la production (tonnes)">
+                <canvas id="productionChart" style="max-height: 200px;"></canvas>
+            </nz-card>
+        </div>
+
+        <div class="col-md-6">
+            <nz-card class="shadow-card" nzTitle="Répartition de la production (%)">
+                <canvas id="repartitionChart" style="max-height: 200px;"></canvas>
+            </nz-card>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-6">
+            <nz-card class="shadow-card" nzTitle="Carte Interactive des Régions du Niger">
+                <div leaflet [leafletOptions]="mapOptions" [leafletLayers]="layers" style="height: 400px;"></div>
+            </nz-card>
+        </div>
+
+
+        <div class="col-md-6">
+            <nz-card class="shadow-card" nzTitle="Statistiques de Production">
+                <nz-table #productionTable [nzData]="filteredData" nzBordered>
+                    <thead>
+                        <tr>
+                            <th>Région</th>
+                            <th>Superficie cultivée (ha)</th>
+                            <th>Production (tonnes)</th>
+                            <th>Répartition (%)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let data of productionTable.data">
+                            <td>{{ data.region }}</td>
+                            <td>{{ data.superficie }}</td>
+                            <td>{{ data.production }}</td>
+                            <td>{{ data.repartition }}</td>
+                        </tr>
+                    </tbody>
+                </nz-table>
+                <p *ngIf="!filteredData.length" class="text-muted mt-3">Aucune donnée disponible pour cette sélection.
+                </p>
+            </nz-card>
+        </div>
+    </div>
+
+
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <nz-card class="shadow-card" nzTitle="Superficie cultivée (ha) par région">
+                <canvas id="superficieChart" style="max-height: 200px;"></canvas>
+            </nz-card>
+        </div>
+        <div class="col-md-6">
+            <nz-card class="shadow-card" nzTitle="Production (tonnes) par région">
+                <canvas id="productionByRegionChart" style="max-height: 200px;"></canvas>
+            </nz-card>
+        </div>
+    </div>
+</div>

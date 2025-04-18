@@ -1,0 +1,104 @@
+<div class="container-fluid py-3 admin-divisions-wrapper">
+    <div class="row mb-5" @fadeIn>
+        <div class="col-md-12">
+            <nz-card class="shadow-card" nzTitle="Gestion des Découpages Administratifs">
+                <!-- Barre de Recherche et Bouton Ajouter Région -->
+                <div class="mb-3">
+                    <div class="row g-3 align-items-center">
+                        <div class="col-md-6">
+                            <nz-input-group nzSearch nzSize="large">
+                                <input nz-input placeholder="Rechercher une entité" [(ngModel)]="searchQuery"
+                                    (ngModelChange)="applyFilters()" />
+                            </nz-input-group>
+                        </div>
+                        <div class="col-md-6 text-end">
+                            <button nz-button nzType="primary" (click)="showAddModal('region')">
+                                <i nz-icon nzType="plus" nzTheme="outline"></i> Ajouter une Région
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <nz-breadcrumb class="mb-3">
+                    <nz-breadcrumb-item>
+                        <a (click)="resetLevel()">Régions</a>
+                    </nz-breadcrumb-item>
+                    <nz-breadcrumb-item *ngIf="selectedRegion">
+                        <a (click)="setLevel('region', selectedRegion)">{{ selectedRegion.name }}</a>
+                    </nz-breadcrumb-item>
+                    <nz-breadcrumb-item *ngIf="selectedDepartment">
+                        <a (click)="setLevel('department', selectedDepartment)">{{ selectedDepartment.name }}</a>
+                    </nz-breadcrumb-item>
+                    <nz-breadcrumb-item *ngIf="selectedCommune">
+                        {{ selectedCommune.name }}
+                    </nz-breadcrumb-item>
+                </nz-breadcrumb>
+
+                <nz-table #divisionsTable [nzData]="filteredDivisions" nzBordered>
+                    <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th *ngIf="currentLevel === 'region'">Nombre de Départements</th>
+                            <th *ngIf="currentLevel === 'department'">Nombre de Communes</th>
+                            <th *ngIf="currentLevel === 'commune'">Nombre de Localités</th>
+                            <th *ngIf="currentLevel !== 'locality'">Parent</th>
+                            <th [width]="170">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let division of divisionsTable.data">
+                            <td>{{ division.name }}</td>
+                            <td *ngIf="currentLevel === 'region'">{{ division.departments?.length || 0 }}</td>
+                            <td *ngIf="currentLevel === 'department'">{{ division.communes?.length || 0 }}</td>
+                            <td *ngIf="currentLevel === 'commune'">{{ division.localities?.length || 0 }}</td>
+                            <td *ngIf="currentLevel !== 'locality'">
+                                {{ getParentName(division) }}
+                            </td>
+                            <td class="text-center p-2">
+                                <button class="m-r-5" *ngIf="currentLevel !== 'locality'"
+                                    (click)="viewSubLevel(division)" nz-button nzType="default" nzShape="circle"
+                                    nz-tooltip [nzTooltipTitle]="'Voir Sous-Niveau'">
+                                    <i nz-icon nzType="eye" nzTheme="outline"></i>
+                                </button>
+                                <button class="m-r-5" (click)="showEditModal(division)" nz-button nzType="default"
+                                    nzShape="circle" nz-tooltip [nzTooltipTitle]="'Modifier'">
+                                    <i nz-icon nzType="edit" nzTheme="outline"></i>
+                                </button>
+                                <button class="m-r-5" nz-button nzType="default" nzShape="circle" nz-popconfirm
+                                    nzPopconfirmTitle="Êtes-vous sûr de vouloir supprimer cette entité ?"
+                                    nzPopconfirmPlacement="bottom" (nzOnConfirm)="deleteDivision(division)"
+                                    (nzOnCancel)="cancelDelete()" nz-tooltip [nzTooltipTitle]="'Supprimer'">
+                                    <i nz-icon nzType="delete" nzTheme="outline"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </nz-table>
+            </nz-card>
+        </div>
+    </div>
+
+    <!-- Modal pour Ajouter/Modifier une Entité -->
+    <nz-modal [(nzVisible)]="isModalVisible"
+        [nzTitle]="isEditing ? 'Modifier ' + currentDivisionType : 'Ajouter une ' + currentDivisionType"
+        (nzOnCancel)="handleModalCancel()" (nzOnOk)="handleModalOk()" [nzOkDisabled]="!divisionForm?.valid">
+        <form nz-form #divisionForm="ngForm" (ngSubmit)="handleModalOk()">
+            <nz-form-item>
+                <nz-form-label nzRequired>Nom</nz-form-label>
+                <nz-form-control>
+                    <input nz-input name="name" [(ngModel)]="currentDivision.name" required />
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item *ngIf="currentDivisionType !== 'region'">
+                <nz-form-label nzRequired>{{ getParentLabel() }}</nz-form-label>
+                <nz-form-control>
+                    <nz-select [ngModel]="currentDivision.parent" name="parent" (ngModelChange)="setParent($event)"
+                        [nzDisabled]="isEditing" required>
+                        <nz-option *ngFor="let parent of getParentOptions()" [nzValue]="parent"
+                            [nzLabel]="parent.name"></nz-option>
+                    </nz-select>
+                </nz-form-control>
+            </nz-form-item>
+        </form>
+    </nz-modal>
+</div>

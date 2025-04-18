@@ -1,0 +1,132 @@
+<div class="container-fluid py-3 markets-wrapper">
+    <div class="row mb-5" @fadeIn>
+        <div class="col-md-12">
+            <nz-card class="shadow-card" nzTitle="Gestion des Marchés">
+                <!-- Barre de Recherche et Bouton Ajouter -->
+                <div class="mb-3">
+                    <div class="row g-3 align-items-center">
+                        <div class="col-md-6">
+                            <nz-input-group nzSearch nzSize="large">
+                                <input nz-input placeholder="Rechercher un marché" [(ngModel)]="searchQuery"
+                                    (ngModelChange)="applyFilters()" />
+                            </nz-input-group>
+                        </div>
+                        <div class="col-md-6 text-end">
+                            <button nz-button nzType="primary" (click)="showAddMarketModal()">
+                                <i nz-icon nzType="plus" nzTheme="outline"></i> Ajouter un Marché
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tableau des Marchés -->
+                <nz-table #marketsTable [nzData]="filteredMarkets" nzBordered>
+                    <thead>
+                        <tr>
+                            <th>Nom du Marché</th>
+                            <th>Localité</th>
+                            <th>Commune</th>
+                            <th>Département</th>
+                            <th>Région</th>
+                            <th [width]="170">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let market of marketsTable.data">
+                            <td>{{ market.name }}</td>
+                            <td>{{ market.locality?.name || 'Non défini' }}</td>
+                            <td>{{ market.locality?.parent?.name || 'Non défini' }}</td>
+                            <td>{{ market.locality?.parent?.parent?.name || 'Non défini' }}</td>
+                            <td>{{ market.locality?.parent?.parent?.parent?.name || 'Non défini' }}</td>
+                            <td class="text-center p-2">
+                                <a class="m-r-5" [routerLink]="['/private/marcher_info', market.id]" nz-button
+                                    nzType="default" nzShape="circle" nz-tooltip [nzTooltipTitle]="'Détails'">
+                                    <i nz-icon nzType="info" nzTheme="outline"></i>
+                                </a>
+                                <button class="m-r-5" (click)="showEditMarketModal(market)" nz-button nzType="default"
+                                    nzShape="circle" nz-tooltip [nzTooltipTitle]="'Modifier'">
+                                    <i nz-icon nzType="edit" nzTheme="outline"></i>
+                                </button>
+                                <button class="m-r-5" nz-button nzType="default" nzShape="circle" nz-popconfirm
+                                    nzPopconfirmTitle="Êtes-vous sûr de vouloir supprimer ce marché ?"
+                                    nzPopconfirmPlacement="bottom" (nzOnConfirm)="deleteMarket(market)"
+                                    (nzOnCancel)="cancelDelete()" nz-tooltip [nzTooltipTitle]="'Supprimer'">
+                                    <i nz-icon nzType="delete" nzTheme="outline"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </nz-table>
+            </nz-card>
+        </div>
+    </div>
+
+    <!-- Modal pour Ajouter/Modifier un Marché -->
+    <nz-modal [(nzVisible)]="isMarketModalVisible" [nzTitle]="isEditing ? 'Modifier le Marché' : 'Ajouter un Marché'"
+        (nzOnCancel)="handleMarketCancel()" (nzOnOk)="handleMarketOk()" [nzOkDisabled]="!marketForm?.valid">
+        <form nz-form #marketForm="ngForm" (ngSubmit)="handleMarketOk()">
+            <div *ngIf="marketForm">
+                <nz-form-item>
+                    <nz-form-label nzRequired>Nom du Marché</nz-form-label>
+                    <nz-form-control nzErrorTip="Veuillez entrer un nom">
+                        <input nz-input name="name" [(ngModel)]="currentMarket.name" required />
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                    <nz-form-label nzRequired>Région</nz-form-label>
+                    <nz-form-control nzErrorTip="Veuillez sélectionner une région">
+                        <nz-select [(ngModel)]="selectedRegion" name="region" (ngModelChange)="updateDepartments()"
+                            nzPlaceHolder="Sélectionner une région" required>
+                            <nz-option *ngFor="let region of regions" [nzValue]="region"
+                                [nzLabel]="region.name"></nz-option>
+                        </nz-select>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                    <nz-form-label nzRequired>Département</nz-form-label>
+                    <nz-form-control nzErrorTip="Veuillez sélectionner un département">
+                        <nz-select [(ngModel)]="selectedDepartment" name="department" (ngModelChange)="updateCommunes()"
+                            nzPlaceHolder="Sélectionner un département" [nzDisabled]="!selectedRegion" required>
+                            <nz-option *ngFor="let dept of departments" [nzValue]="dept"
+                                [nzLabel]="dept.name"></nz-option>
+                        </nz-select>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                    <nz-form-label nzRequired>Commune</nz-form-label>
+                    <nz-form-control nzErrorTip="Veuillez sélectionner une commune">
+                        <nz-select [(ngModel)]="selectedCommune" name="commune" (ngModelChange)="updateLocalities()"
+                            nzPlaceHolder="Sélectionner une commune" [nzDisabled]="!selectedDepartment" required>
+                            <nz-option *ngFor="let commune of communes" [nzValue]="commune"
+                                [nzLabel]="commune.name"></nz-option>
+                        </nz-select>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                    <nz-form-label nzRequired>Localité</nz-form-label>
+                    <nz-form-control nzErrorTip="Veuillez sélectionner une localité">
+                        <nz-select [(ngModel)]="currentMarket.locality" name="locality"
+                            nzPlaceHolder="Sélectionner une localité" [nzDisabled]="!selectedCommune" required>
+                            <nz-option *ngFor="let locality of localities" [nzValue]="locality"
+                                [nzLabel]="locality.name"></nz-option>
+                        </nz-select>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                    <nz-form-label nzRequired>Latitude</nz-form-label>
+                    <nz-form-control nzErrorTip="Veuillez entrer une latitude valide">
+                        <input nz-input name="latitude" [(ngModel)]="currentMarket.latitude" type="number"
+                            step="0.000001" required />
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                    <nz-form-label nzRequired>Longitude</nz-form-label>
+                    <nz-form-control nzErrorTip="Veuillez entrer une longitude valide">
+                        <input nz-input name="longitude" [(ngModel)]="currentMarket.longitude" type="number"
+                            step="0.000001" required />
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+        </form>
+    </nz-modal>
+</div>

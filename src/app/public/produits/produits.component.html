@@ -1,0 +1,37 @@
+<div class="container-fluid py-4">
+    <h2 class="mb-4">Marketplace - Produits</h2>
+    <nz-card class="shadow-sm ">
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <nz-select nzSize="large" nzPlaceHolder="Catégorie" style="width: 100%;">
+                    <nz-option nzValue="céréales" nzLabel="Céréales"></nz-option>
+                    <nz-option nzValue="légumineuses" nzLabel="Légumineuses"></nz-option>
+                </nz-select>
+            </div>
+            <div class="col-md-8">
+                <nz-input-group nzSearch nzSize="large" [nzAddOnAfter]="searchButton">
+                    <input type="text" style="background-color: #f1f2f5;" nz-input
+                        placeholder="Rechercher un produit..." />
+                </nz-input-group>
+                <ng-template #searchButton>
+                    <button nz-button nzType="primary" nzSearch><i nz-icon nzType="search"></i></button>
+                </ng-template>
+            </div>
+        </div>
+    </nz-card>
+
+    <div class="row">
+        <div class="col-md-4" *ngFor="let produit of produits">
+            <nz-card class="shadow-sm" [nzCover]="coverTemplate" [nzActions]="[actionDetail]">
+                <nz-card-meta nzTitle="{{ produit.nom }}"
+                    nzDescription="{{ produit.categorie }} - {{ produit.prix }} FCFA"></nz-card-meta>
+                <ng-template #coverTemplate>
+                    <img alt="{{ produit.nom }}" src="{{ produit.image }}" class="img-fluid" />
+                </ng-template>
+                <ng-template #actionDetail>
+                    <a [routerLink]="['/public/produits_details', produit.id]">Détails</a>
+                </ng-template>
+            </nz-card>
+        </div>
+    </div>
+</div>

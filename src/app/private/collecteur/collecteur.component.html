@@ -1,0 +1,41 @@
+<div class="container-fluid py-5 collectors-wrapper">
+    <!-- En-tête -->
+    <!-- <div class="header mb-5 text-center">
+        <h1 class="text-dark mb-2">Liste des Collecteurs</h1>
+        <p class="text-muted">Visualisez les collecteurs de données sur la plateforme</p>
+    </div> -->
+
+    <!-- Liste des Collecteurs -->
+    <div class="row mb-5" @fadeIn>
+        <div class="col-md-12">
+            <nz-card class="shadow-card" nzTitle="Collecteurs de Données">
+                <nz-table #collectorsTable [nzData]="collectors" nzBordered>
+                    <thead>
+                        <tr>
+                            <th>Nom du Collecteur</th>
+                            <th>Localité</th>
+                            <th>Pays</th>
+                            <th>Nombre de Données Collectées</th>
+                            <th>Dernière Collecte</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let collector of collectorsTable.data">
+                            <td>{{ collector.name }}</td>
+                            <td>{{ collector.locality }}</td>
+                            <td>{{ collector.country }}</td>
+                            <td>{{ collector.dataCollectedCount }}</td>
+                            <td>{{ collector.lastCollectionDate | date: 'dd/MM/yyyy' }}</td>
+                            <td>
+                                <button nz-button nzType="primary" class="me-2" (click)="viewDetails(collector)">
+                                    Voir Détails
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </nz-table>
+            </nz-card>
+        </div>
+    </div>
+</div>

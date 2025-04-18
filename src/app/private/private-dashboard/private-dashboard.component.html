@@ -1,0 +1,216 @@
+<!-- <div class="container-fluid py-5 dashboard-wrapper">
+    <div class="header mb-5">
+        <h1 class="text-white mb-2">Tableau de Bord Privé - Le Grenier du Sahel</h1>
+        <p class="text-white opacity-75">Gérez et visualisez les données agricoles en temps réel</p>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-md-3 mb-4">
+            <nz-card class="stat-card">
+                <div class="d-flex align-items-center">
+                    <i nz-icon nzType="team" class="stat-icon text-primary"></i>
+                    <div>
+                        <h5 class="text-muted mb-1">Utilisateurs</h5>
+                        <h3 class="text-primary">{{ stats.usersCount }}</h3>
+                    </div>
+                </div>
+            </nz-card>
+        </div>
+        <div class="col-md-3 mb-4">
+            <nz-card class="stat-card">
+                <div class="d-flex align-items-center">
+                    <i nz-icon nzType="shop" class="stat-icon text-success"></i>
+                    <div>
+                        <h5 class="text-muted mb-1">Marchés</h5>
+                        <h3 class="text-success">{{ stats.marketsCount }}</h3>
+                    </div>
+                </div>
+            </nz-card>
+        </div>
+        <div class="col-md-3 mb-4">
+            <nz-card class="stat-card">
+                <div class="d-flex align-items-center">
+                    <i nz-icon nzType="global" class="stat-icon text-warning"></i>
+                    <div>
+                        <h5 class="text-muted mb-1">Localités</h5>
+                        <h3 class="text-warning">{{ stats.localities.length }}</h3>
+                    </div>
+                </div>
+            </nz-card>
+        </div>
+        <div class="col-md-3 mb-4">
+            <nz-card class="stat-card">
+                <div class="d-flex align-items-center">
+                    <i nz-icon nzType="swap" class="stat-icon text-danger"></i>
+                    <div>
+                        <h5 class="text-muted mb-1">Transactions</h5>
+                        <h3 class="text-danger">{{ stats.transactionsCount }}</h3>
+                    </div>
+                </div>
+            </nz-card>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-md-4 mb-4">
+            <nz-card class="shadow-card" nzTitle="Données Collectées par Produit (kg)">
+                <canvas id="collectedDataChart" style="max-height: 300px;"></canvas>
+            </nz-card>
+        </div>
+        <div class="col-md-4 mb-4">
+            <nz-card class="shadow-card" nzTitle="Utilisateurs par Pays">
+                <canvas id="usersByCountryChart" style="max-height: 300px;"></canvas>
+            </nz-card>
+        </div>
+        <div class="col-md-4 mb-4">
+            <nz-card class="shadow-card" nzTitle="Localités Couvertes">
+                <div leaflet [leafletOptions]="mapOptions" [leafletLayers]="layers" style="height: 300px;"></div>
+            </nz-card>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-md-12">
+            <nz-card class="shadow-card" nzTitle="Tendance des Prix Moyens (FCFA/kg)">
+                <canvas id="priceTrendChart" style="max-height: 400px;"></canvas>
+            </nz-card>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-md-12">
+            <nz-card class="shadow-card" nzTitle="Détails des Localités">
+                <nz-table #localitiesTable [nzData]="stats.localities" nzBordered>
+                    <thead>
+                        <tr>
+                            <th>Localité</th>
+                            <th>Pays</th>
+                            <th>Nombre de Marchés</th>
+                            <th>Utilisateurs Actifs</th>
+                            <th>Produits Principaux</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let locality of localitiesTable.data">
+                            <td>{{ locality.name }}</td>
+                            <td>{{ locality.country }}</td>
+                            <td>{{ locality.marketsCount }}</td>
+                            <td>{{ locality.activeUsers }}</td>
+                            <td>{{ locality.mainProducts.join(', ') }}</td>
+                        </tr>
+                    </tbody>
+                </nz-table>
+            </nz-card>
+        </div>
+    </div>
+
+
+
+</div> -->
+
+
+<div class="container-fluid py-5 dashboard-wrapper">
+    <!-- Barre de Navigation -->
+
+    <!-- En-tête -->
+    <div class="header ">
+        <h1 class="text-dark mb-2">Tableau de Bord Privé</h1>
+        <p class="text-muted">Gérez et visualisez les données agricoles en temps réel</p>
+    </div>
+
+    <!-- Statistiques Clés -->
+    <div class="row ">
+        <div class="col-md-3 mb-4" *ngFor="let stat of statsList" @fadeIn>
+            <nz-card class="stat-card" [ngClass]="stat.class">
+                <div class="d-flex align-items-center">
+                    <i nz-icon [nzType]="stat.icon" class="stat-icon" [ngClass]="stat.colorClass"></i>
+                    <div>
+                        <h5 class="text-muted mb-1">{{ stat.label }}</h5>
+                        <h3 [ngClass]="stat.colorClass">{{ stat.value }}</h3>
+                    </div>
+                </div>
+            </nz-card>
+        </div>
+    </div>
+
+    <!-- Graphiques et Carte -->
+    <div class="row ">
+        <!-- Graphique : Données Collectées par Produit (Donut) -->
+        <div class="col-md-4 mb-4" @fadeIn>
+            <nz-card class="shadow-card" nzTitle="Données Collectées par Produit (kg)">
+                <canvas id="collectedDataChart" style="max-height: 300px;"></canvas>
+            </nz-card>
+        </div>
+        <!-- Graphique : Utilisateurs par Pays (Bar) -->
+        <div class="col-md-4 mb-4" @fadeIn>
+            <nz-card class="shadow-card" nzTitle="Utilisateurs par Pays">
+                <canvas id="usersByCountryChart" style="max-height: 300px;"></canvas>
+            </nz-card>
+        </div>
+        <!-- Mini-Carte : Localités -->
+        <div class="col-md-4 mb-4" @fadeIn>
+            <nz-card class="shadow-card" nzTitle="Localités Couvertes">
+                <div leaflet [leafletOptions]="mapOptions" [leafletLayers]="layers" style="height: 300px;"></div>
+            </nz-card>
+        </div>
+    </div>
+
+    <!-- Graphiques : Tendance des Prix et Transactions -->
+    <div class="row mb-5">
+        <div class="col-md-6 mb-4" @fadeIn>
+            <nz-card class="shadow-card" nzTitle="Tendance des Prix Moyens (FCFA/kg)">
+                <canvas id="priceTrendChart" style="max-height: 400px;"></canvas>
+            </nz-card>
+        </div>
+        <div class="col-md-6 mb-4" @fadeIn>
+            <nz-card class="shadow-card" nzTitle="Transactions par Mois">
+                <canvas id="transactionsChart" style="max-height: 400px;"></canvas>
+            </nz-card>
+        </div>
+    </div>
+
+    <!-- Tableau des Localités -->
+    <div class="row mb-5" @fadeIn>
+        <div class="col-md-12">
+            <nz-card class="shadow-card" nzTitle="Détails des Localités">
+                <nz-table #localitiesTable [nzData]="stats.localities" nzBordered>
+                    <thead>
+                        <tr>
+                            <th>Localité</th>
+                            <th>Pays</th>
+                            <th>Nombre de Marchés</th>
+                            <th>Utilisateurs Actifs</th>
+                            <th>Produits Principaux</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let locality of localitiesTable.data">
+                            <td>{{ locality.name }}</td>
+                            <td>{{ locality.country }}</td>
+                            <td>{{ locality.marketsCount }}</td>
+                            <td>{{ locality.activeUsers }}</td>
+                            <td>{{ locality.mainProducts.join(', ') }}</td>
+                        </tr>
+                    </tbody>
+                </nz-table>
+            </nz-card>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <!-- <div class="row" @fadeIn>
+        <div class="col-md-12">
+            <nz-card class="shadow-card">
+                <h3>Accéder aux Fonctionnalités</h3>
+                <div class="d-flex flex-wrap">
+                    <a routerLink="/profile" class="btn btn-custom btn-primary m-2">Gérer Mon Profil</a>
+                    <a routerLink="/import" class="btn btn-custom btn-primary m-2">Importer un Fichier</a>
+                    <a routerLink="/offer" class="btn btn-custom btn-primary m-2">Publier une Offre/Demande</a>
+                    <a routerLink="/matches" class="btn btn-custom btn-primary m-2">Voir Mes Correspondances</a>
+                    <a routerLink="/map" class="btn btn-custom btn-primary m-2">Carte des Marchés/Magasins</a>
+                    <a routerLink="/advice" class="btn btn-custom btn-primary m-2">Conseils Agricoles</a>
+                </div>
+            </nz-card>
+        </div>
+    </div> -->
+</div>

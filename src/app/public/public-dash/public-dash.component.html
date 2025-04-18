@@ -1,0 +1,42 @@
+<div class="container-fluid py-4">
+    <h2 class="mb-4">Tableau de Bord - Le Grenier du Sahel</h2>
+    <div class="row">
+        <!-- Carte pour Nombre d'Inscrits -->
+        <div class="col-md-4">
+            <nz-card nzTitle="Total Inscrits" class="shadow-sm">
+                <h3>1,250</h3>
+                <p class="text-muted">Utilisateurs enregistrés</p>
+            </nz-card>
+        </div>
+        <!-- Carte pour Nombre d'Offres -->
+        <div class="col-md-4">
+            <nz-card nzTitle="Total Offres" class="shadow-sm">
+                <h3>320</h3>
+                <p class="text-muted">Offres disponibles</p>
+            </nz-card>
+        </div>
+        <!-- Carte pour Nombre de Demandeurs -->
+        <div class="col-md-4">
+            <nz-card nzTitle="Total Demandeurs" class="shadow-sm">
+                <h3>450</h3>
+                <p class="text-muted">Demandeurs actifs</p>
+            </nz-card>
+        </div>
+    </div>
+
+    <!-- Graphiques -->
+    <div class="row mt-4">
+        <!-- Graphique Statistiques Mensuelles -->
+        <div class="col-md-6">
+            <nz-card nzTitle="Statistiques Mensuelles" class="shadow-sm">
+                <canvas id="statsChart" class="w-100" height="300"></canvas>
+            </nz-card>
+        </div>
+        <!-- Graphique Produits les Plus Vendus -->
+        <div class="col-md-6">
+            <nz-card nzTitle="Produits les Plus Vendus" class="shadow-sm">
+                <canvas id="productsChart" class="w-100" height="300"></canvas>
+            </nz-card>
+        </div>
+    </div>
+</div>

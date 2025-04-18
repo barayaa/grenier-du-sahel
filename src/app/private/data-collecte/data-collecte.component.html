@@ -1,0 +1,34 @@
+<div class="container-fluid py-5 collected-data-wrapper">
+
+    <!-- Liste des Données Collectées -->
+    <div class="row mb-5" @fadeIn>
+        <div class="col-md-12">
+            <nz-card class="shadow-card" nzTitle="Données Collectées">
+                <nz-table #collectedDataTable [nzData]="collectedData" nzBordered>
+                    <thead>
+                        <tr>
+                            <th>Produit</th>
+                            <th>Quantité (kg)</th>
+                            <th>Localité</th>
+                            <th>Pays</th>
+                            <th>Collecteur</th>
+                            <th>Date de Collecte</th>
+                            <th>Source</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let data of collectedDataTable.data">
+                            <td>{{ data.product }}</td>
+                            <td>{{ data.quantity }}</td>
+                            <td>{{ data.locality }}</td>
+                            <td>{{ data.country }}</td>
+                            <td>{{ data.collector }}</td>
+                            <td>{{ data.collectionDate | date: 'dd/MM/yyyy' }}</td>
+                            <td>{{ data.source }}</td>
+                        </tr>
+                    </tbody>
+                </nz-table>
+            </nz-card>
+        </div>
+    </div>
+</div>

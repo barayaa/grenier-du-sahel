@@ -1,0 +1,26 @@
+.cartographie-wrapper {
+    padding: 20px;
+}
+
+.leaflet-container {
+    width: 100%;
+    height: 100%;
+    background: #fff;
+}
+
+.shadow-card {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+nz-select,
+nz-table {
+    width: 100%;
+}
+
+nz-tabset {
+    background: #fff;
+    padding: 16px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}

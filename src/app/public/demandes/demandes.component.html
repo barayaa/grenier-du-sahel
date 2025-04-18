@@ -1,0 +1,89 @@
+<!-- <div class="container-fluid py-4">
+    <h2 class="mb-4">Liste des Demandes</h2>
+    <nz-card class="shadow-sm">
+       
+        <div class="mb-3">
+            <nz-input-group nzSearch nzSize="large" [nzAddOnAfter]="searchButton">
+                <input type="text" nz-input placeholder="Rechercher une demande..." />
+            </nz-input-group>
+            <ng-template #searchButton>
+                <button nz-button nzType="primary" nzSearch><i nz-icon nzType="search"></i></button>
+            </ng-template>
+        </div>
+
+       
+        <nz-table #demandesTable [nzData]="demandes">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Produit</th>
+                    <th>Quantité</th>
+                    <th>Date</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let demande of demandesTable.data">
+                    <td>{{ demande.id }}</td>
+                    <td>{{ demande.produit }}</td>
+                    <td>{{ demande.quantite }}</td>
+                    <td>{{ demande.date }}</td>
+                    <td>
+                        <nz-tag [nzColor]="demande.statut === 'En attente' ? 'orange' : 'green'">
+                            {{ demande.statut }}
+                        </nz-tag>
+                    </td>
+                    <td>
+                        <a nz-button nzType="link" [routerLink]="['/demandes', demande.id]">Détails</a>
+                    </td>
+                </tr>
+            </tbody>
+        </nz-table>
+    </nz-card>
+</div> -->
+
+
+<div class="container-fluid py-4">
+    <h2 class="mb-4">Liste des Demandes</h2>
+
+    <!-- Filtres -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <nz-input-group nzSearch nzSize="large" [nzAddOnAfter]="searchButton">
+                <input type="text" nz-input placeholder="Rechercher une demande..." />
+            </nz-input-group>
+            <ng-template #searchButton>
+                <button nz-button nzType="primary" nzSearch>
+                    <i nz-icon nzType="search"></i> Rechercher
+                </button>
+            </ng-template>
+        </div>
+    </div>
+
+    <!-- Grille de Cartes -->
+    <div class="row">
+        <div class="col-md-4 mb-4" *ngFor="let demande of demandes">
+            <nz-card class="demand-card shadow-sm" [nzTitle]="cardTitle" [nzExtra]="extraTemplate">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p><strong>Produit :</strong> {{ demande.produit }}</p>
+                        <p><strong>Quantité :</strong> {{ demande.quantite }}</p>
+                        <p><strong>Date :</strong> {{ demande.date }}</p>
+                    </div>
+                    <nz-tag [nzColor]="demande.statut === 'En attente' ? 'orange' : 'green'">
+                        {{ demande.statut }}
+                    </nz-tag>
+                </div>
+                <ng-template #cardTitle>
+                    <h5 class="mb-0">Demande #{{ demande.id }}</h5>
+                </ng-template>
+                <ng-template #extraTemplate>
+                    <a nz-button nzType="primary" [routerLink]="['/demandes', demande.id]">
+                        <i nz-icon nzType="eye"></i> Détails
+                    </a>
+                </ng-template>
+            </nz-card>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,209 @@
+<div class="container-fluid py-3 profiles-wrapper">
+    <div class="row mb-5" @fadeIn>
+        <div class="col-md-12">
+            <nz-card class="shadow-card" nzTitle="Gestion des Profils">
+                <!-- Barre de Recherche et Filtres -->
+                <div class="mb-3">
+                    <div class="row g-3 align-items-center">
+                        <div class="col-md-4">
+                            <nz-input-group nzSearch nzSize="large">
+                                <input nz-input placeholder="Rechercher par nom" [(ngModel)]="searchQuery"
+                                    (ngModelChange)="applyFilters()" />
+                            </nz-input-group>
+                        </div>
+                        <div class="col-md-3">
+                            <nz-select [(ngModel)]="filterRole" (ngModelChange)="applyFilters()"
+                                nzPlaceHolder="Filtrer par rôle" style="width: 100%;">
+                                <nz-option nzValue="" nzLabel="Tous les rôles"></nz-option>
+                                <nz-option nzValue="Administrateur" nzLabel="Administrateur"></nz-option>
+                                <nz-option nzValue="Utilisateur" nzLabel="Utilisateur"></nz-option>
+                                <nz-option nzValue="Invité" nzLabel="Invité"></nz-option>
+                            </nz-select>
+                        </div>
+                        <div class="col-md-3">
+                            <nz-select [(ngModel)]="filterStatus" (ngModelChange)="applyFilters()"
+                                nzPlaceHolder="Filtrer par statut" style="width: 100%;">
+                                <nz-option nzValue="" nzLabel="Tous les statuts"></nz-option>
+                                <nz-option nzValue="Actif" nzLabel="Actif"></nz-option>
+                                <nz-option nzValue="Inactif" nzLabel="Inactif"></nz-option>
+                            </nz-select>
+                        </div>
+                        <div class="col-md-2 text-end">
+                            <button nz-button nzType="primary" (click)="showAddProfileModal()">
+                                <i nz-icon nzType="plus" nzTheme="outline"></i> Ajouter un Profil
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tableau des Profils -->
+                <nz-table #profilesTable [nzData]="filteredProfiles" nzBordered>
+                    <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Localité</th>
+                            <th>Pays</th>
+                            <th>Rôle</th>
+                            <th>Statut</th>
+                            <th>Date d'Inscription</th>
+                            <th [width]="170">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let profile of profilesTable.data">
+                            <td>{{ profile.name }}</td>
+                            <td>{{ profile.locality }}</td>
+                            <td>{{ profile.country }}</td>
+                            <td>{{ profile.role }}</td>
+                            <td>
+                                <nz-tag [nzColor]="profile.status === 'Actif' ? 'green' : 'red'">
+                                    {{ profile.status }}
+                                </nz-tag>
+                            </td>
+                            <td>{{ profile.registrationDate | date: 'dd/MM/yyyy' }}</td>
+                            <td class="text-center p-2">
+                                <button class="m-r-5" (click)="showProfileDetails(profile)" nz-button nzType="default"
+                                    nzShape="circle" nz-tooltip [nzTooltipTitle]="'Détails'">
+                                    <i nz-icon nzType="info" nzTheme="outline"></i>
+                                </button>
+                                <button class="m-r-5" (click)="showEditProfileModal(profile)" nz-button nzType="default"
+                                    nzShape="circle" nz-tooltip [nzTooltipTitle]="'Modifier'">
+                                    <i nz-icon nzType="edit" nzTheme="outline"></i>
+                                </button>
+                                <button class="m-r-5" nz-button nzType="default" nzShape="circle" nz-popconfirm
+                                    nzPopconfirmTitle="Êtes-vous sûr de vouloir supprimer ce profil ?"
+                                    nzPopconfirmPlacement="bottom" (nzOnConfirm)="deleteProfile(profile)"
+                                    (nzOnCancel)="cancelDelete()" nz-tooltip [nzTooltipTitle]="'Supprimer'">
+                                    <i nz-icon nzType="delete" nzTheme="outline"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </nz-table>
+            </nz-card>
+        </div>
+    </div>
+
+    <!-- Modal pour Ajouter un Profil -->
+    <nz-modal [(nzVisible)]="isAddProfileModalVisible" nzTitle="Ajouter un Profil" (nzOnCancel)="handleAddCancel()"
+        (nzOnOk)="handleAddOk()" [nzOkDisabled]="!addProfileForm?.valid">
+        <form nz-form #addProfileForm="ngForm" (ngSubmit)="handleAddOk()">
+            <nz-form-item>
+                <nz-form-label nzRequired>Nom</nz-form-label>
+                <nz-form-control>
+                    <input nz-input name="name" [(ngModel)]="newProfile.name" required />
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label nzRequired>Localité</nz-form-label>
+                <nz-form-control>
+                    <input nz-input name="locality" [(ngModel)]="newProfile.locality" required />
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label nzRequired>Pays</nz-form-label>
+                <nz-form-control>
+                    <input nz-input name="country" [(ngModel)]="newProfile.country" required />
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label nzRequired>Rôle</nz-form-label>
+                <nz-form-control>
+                    <nz-select name="role" [(ngModel)]="newProfile.role" required>
+                        <nz-option nzValue="Administrateur" nzLabel="Administrateur"></nz-option>
+                        <nz-option nzValue="Utilisateur" nzLabel="Utilisateur"></nz-option>
+                        <nz-option nzValue="Invité" nzLabel="Invité"></nz-option>
+                    </nz-select>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label nzRequired>Statut</nz-form-label>
+                <nz-form-control>
+                    <nz-select name="status" [(ngModel)]="newProfile.status" required>
+                        <nz-option nzValue="Actif" nzLabel="Actif"></nz-option>
+                        <nz-option nzValue="Inactif" nzLabel="Inactif"></nz-option>
+                    </nz-select>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label>Email</nz-form-label>
+                <nz-form-control>
+                    <input nz-input name="email" [(ngModel)]="newProfile.email" type="email" />
+                </nz-form-control>
+            </nz-form-item>
+        </form>
+    </nz-modal>
+
+    <!-- Modal pour Voir/Modifier les Détails d’un Profil -->
+    <nz-modal [(nzVisible)]="isProfileDetailsModalVisible"
+        [nzTitle]="selectedProfile ? (isEditing ? 'Modifier ' + selectedProfile.name : 'Détails de ' + selectedProfile.name) : 'Détails'"
+        (nzOnCancel)="handleDetailsCancel()" (nzOnOk)="handleDetailsOk()"
+        [nzOkText]="isEditing ? 'Sauvegarder' : 'Modifier'" [nzOkDisabled]="isEditing && !editProfileForm?.valid"
+        [nzCancelText]="isEditing ? 'Annuler' : 'Fermer'">
+        <ng-container *ngIf="selectedProfile">
+            <div *ngIf="!isEditing">
+                <nz-descriptions nzTitle="Informations du Profil" nzBordered>
+                    <nz-descriptions-item nzTitle="Nom">{{ selectedProfile.name }}</nz-descriptions-item>
+                    <nz-descriptions-item nzTitle="Localité">{{ selectedProfile.locality }}</nz-descriptions-item>
+                    <nz-descriptions-item nzTitle="Pays">{{ selectedProfile.country }}</nz-descriptions-item>
+                    <nz-descriptions-item nzTitle="Rôle">{{ selectedProfile.role }}</nz-descriptions-item>
+                    <nz-descriptions-item nzTitle="Statut">
+                        <nz-tag [nzColor]="selectedProfile.status === 'Actif' ? 'green' : 'red'">
+                            {{ selectedProfile.status }}
+                        </nz-tag>
+                    </nz-descriptions-item>
+                    <nz-descriptions-item nzTitle="Date d'Inscription">
+                        {{ selectedProfile.registrationDate | date: 'dd/MM/yyyy' }}
+                    </nz-descriptions-item>
+                    <nz-descriptions-item nzTitle{Code: 0eb8ba56-7de8-466b-88ad-3dd91899183d}="Email">{{
+                        selectedProfile.email || 'Non défini' }}</nz-descriptions-item>
+                </nz-descriptions>
+            </div>
+            <form *ngIf="isEditing" nz-form #editProfileForm="ngForm" (ngSubmit)="handleDetailsOk()">
+                <nz-form-item>
+                    <nz-form-label nzRequired>Nom</nz-form-label>
+                    <nz-form-control>
+                        <input nz-input name="name" [(ngModel)]="selectedProfile.name" required />
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                    <nz-form-label nzRequired>Localité</nz-form-label>
+                    <nz-form-control>
+                        <input nz-input name="locality" [(ngModel)]="selectedProfile.locality" required />
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                    <nz-form-label nzRequired>Pays</nz-form-label>
+                    <nz-form-control>
+                        <input nz-input name="country" [(ngModel)]="selectedProfile.country" required />
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                    <nz-form-label nzRequired>Rôle</nz-form-label>
+                    <nz-form-control>
+                        <nz-select name="role" [(ngModel)]="selectedProfile.role" required>
+                            <nz-option nzValue="Administrateur" nzLabel="Administrateur"></nz-option>
+                            <nz-option nzValue="Utilisateur" nzLabel="Utilisateur"></nz-option>
+                            <nz-option nzValue="Invité" nzLabel="Invité"></nz-option>
+                        </nz-select>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                    <nz-form-label nzRequired>Statut</nz-form-label>
+                    <nz-form-control>
+                        <nz-select name="status" [(ngModel)]="selectedProfile.status" required>
+                            <nz-option nzValue="Actif" nzLabel="Actif"></nz-option>
+                            <nz-option nzValue="Inactif" nzLabel="Inactif"></nz-option>
+                        </nz-select>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                    <nz-form-label>Email</nz-form-label>
+                    <nz-form-control>
+                        <input nz-input name="email" [(ngModel)]="selectedProfile.email" type="email" />
+                    </nz-form-control>
+                </nz-form-item>
+            </form>
+        </ng-container>
+    </nz-modal>
+</div>
