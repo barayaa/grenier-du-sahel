@@ -1,0 +1,50 @@
+.container-fluid {
+    /* max-width: 800px; */
+    margin: 0 auto;
+}
+
+nz-card {
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+nz-form-item {
+    margin-bottom: 16px;
+}
+
+
+::ng-deep .ant-select:not(.ant-select-customize-input) .ant-select-selector {
+    background-color: #f1f2f5 !important;
+}
+
+input[nz-input],
+textarea[nz-input] {
+    background-color: #f1f2f5 !important;
+}
+
+
+
+nz-select,
+nz-date-picker,
+input[nz-input] {
+    width: 100%;
+}
+
+button[nz-button] {
+    min-width: 120px;
+}
+
+@media (max-width: 576px) {
+    .container-fluid {
+        padding: 16px;
+    }
+
+    button[nz-button] {
+        width: 100%;
+        margin-bottom: 8px;
+    }
+
+    .ms-2 {
+        margin-left: 0 !important;
+    }
+}

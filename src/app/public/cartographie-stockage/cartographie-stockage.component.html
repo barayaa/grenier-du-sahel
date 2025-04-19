@@ -1,0 +1,80 @@
+<div class="container-fluid py-4 cartographie-wrapper">
+    <h2 class="mb-4">Cartographie des Stockages au Niger - Le Grenier du Sahel</h2>
+
+    <!-- Sélecteurs -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <nz-select [(ngModel)]="selectedProduct" (ngModelChange)="updateData()" nzPlaceHolder="Choisir un produit"
+                style="width: 100%;">
+                <nz-option nzValue="oignon" nzLabel="Oignon"></nz-option>
+                <nz-option nzValue="niebe" nzLabel="Niébé"></nz-option>
+                <nz-option nzValue="sorgho" nzLabel="Sorgho"></nz-option>
+                <nz-option nzValue="arachide" nzLabel="Arachide"></nz-option>
+            </nz-select>
+        </div>
+        <div class="col-md-6">
+            <nz-select [(ngModel)]="selectedYear" (ngModelChange)="updateData()" nzPlaceHolder="Choisir une année"
+                style="width: 100%;">
+                <nz-option nzValue="2023" nzLabel="2023"></nz-option>
+                <nz-option nzValue="2024" nzLabel="2024"></nz-option>
+                <nz-option nzValue="2025" nzLabel="2025"></nz-option>
+            </nz-select>
+        </div>
+    </div>
+
+    <!-- Graphiques -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <nz-card class="shadow-card" nzTitle="Évolution du stockage (tonnes)">
+                <canvas id="stockageChart" style="max-height: 200px;"></canvas>
+            </nz-card>
+        </div>
+        <div class="col-md-6">
+            <nz-card class="shadow-card" nzTitle="Répartition du stockage (%)">
+                <canvas id="stockageRepartitionChart" style="max-height: 200px;"></canvas>
+            </nz-card>
+        </div>
+    </div>
+
+    <!-- Carte et Tableau -->
+    <div class="row">
+        <div class="col-md-6">
+            <nz-card class="shadow-card" nzTitle="Carte Interactive des Régions du Niger">
+                <div leaflet [leafletOptions]="mapOptions" [leafletLayers]="stockageLayers" style="height: 400px;">
+                </div>
+            </nz-card>
+        </div>
+        <div class="col-md-6">
+            <nz-card class="shadow-card" nzTitle="Statistiques de Stockage">
+                <nz-table #stockageTable [nzData]="filteredStockageData" nzBordered>
+                    <thead>
+                        <tr>
+                            <th>Région</th>
+                            <th>Quantité stockée (tonnes)</th>
+                            <th>Répartition (%)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let data of stockageTable.data">
+                            <td>{{ data.region }}</td>
+                            <td>{{ data.quantite }}</td>
+                            <td>{{ data.repartition }}</td>
+                        </tr>
+                    </tbody>
+                </nz-table>
+                <p *ngIf="!filteredStockageData.length" class="text-muted mt-3">
+                    Aucune donnée disponible pour cette sélection.
+                </p>
+            </nz-card>
+        </div>
+    </div>
+
+    <!-- Graphique supplémentaire -->
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <nz-card class="shadow-card" nzTitle="Stockage (tonnes) par région">
+                <canvas id="stockageByRegionChart" style="max-height: 200px;"></canvas>
+            </nz-card>
+        </div>
+    </div>
+</div>

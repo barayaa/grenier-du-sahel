@@ -1,1 +1,150 @@
-<p>conseil-agricole works!</p>
+<div class="advice-page">
+    <div class="header-section">
+        <h1 class="page-title">Conseils Agricoles</h1>
+        <p class="page-subtitle">Obtenez des recommandations personnalisées pour vos cultures.</p>
+    </div>
+    <div class="filters-section">
+        <nz-form-item>
+            <nz-form-label>Produit</nz-form-label>
+            <nz-form-control>
+                <nz-select [(ngModel)]="selectedProduct" (ngModelChange)="updateLocalities()"
+                    nzPlaceHolder="Sélectionner un produit">
+                    <nz-option *ngFor="let product of products" [nzValue]="product"
+                        [nzLabel]="product.name"></nz-option>
+                </nz-select>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label>Localité</nz-form-label>
+            <nz-form-control>
+                <nz-select [(ngModel)]="selectedLocality" (ngModelChange)="updateAdvice()"
+                    nzPlaceHolder="Sélectionner une localité" [nzDisabled]="!selectedProduct">
+                    <nz-option *ngFor="let advice of selectedProduct?.adviceByLocality" [nzValue]="advice.locality"
+                        [nzLabel]="advice.locality.name"></nz-option>
+                </nz-select>
+            </nz-form-control>
+        </nz-form-item>
+    </div>
+    <div class="content-section" @fadeIn *ngIf="selectedAdvice; else noAdvice">
+        <div class="advice-card">
+            <h2>Météo à {{ selectedLocality?.name }}</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Température</span>
+                    <span class="info-value">{{ selectedAdvice.weather.temperature }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Pluviométrie</span>
+                    <span class="info-value">{{ selectedAdvice.weather.rainfall }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Humidité</span>
+                    <span class="info-value">{{ selectedAdvice.weather.humidity }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="advice-card">
+            <h2>Culture</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Type de Sol</span>
+                    <span class="info-value">{{ selectedAdvice.cultivation.soil }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Période de Plantation</span>
+                    <span class="info-value">{{ selectedAdvice.cultivation.plantingPeriod }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Conseils</span>
+                    <span class="info-value">{{ selectedAdvice.cultivation.tips }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="advice-card">
+            <h2>Production</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Irrigation</span>
+                    <span class="info-value">{{ selectedAdvice.production.irrigation }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Engrais</span>
+                    <span class="info-value">{{ selectedAdvice.production.fertilizers }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Outils</span>
+                    <span class="info-value">{{ selectedAdvice.production.tools }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="advice-card">
+            <h2>Conservation et Stockage</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Méthodes de Conservation</span>
+                    <span class="info-value">{{ selectedAdvice.conservation.methods }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Durée</span>
+                    <span class="info-value">{{ selectedAdvice.conservation.duration }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Stockage</span>
+                    <span class="info-value">{{ selectedAdvice.storage.facilities }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Conseils</span>
+                    <span class="info-value">{{ selectedAdvice.storage.tips }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="advice-card">
+            <h2>Marchés Recommandés</h2>
+            <nz-table [nzData]="selectedAdvice.markets" nzSize="middle">
+                <thead>
+                    <tr>
+                        <th>Marché</th>
+                        <th>Prix Estimé</th>
+                        <th>Demande</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let market of selectedAdvice.markets">
+                        <td>
+                            <a [routerLink]="['/private/marcher_info', market.id]">{{ market.name }}</a>
+                        </td>
+                        <td>{{ market.estimatedPrice }}</td>
+                        <td>{{ market.demand }}</td>
+                    </tr>
+                </tbody>
+            </nz-table>
+        </div>
+        <div class="advice-card">
+            <h2>Maladies et Traitements</h2>
+            <nz-table [nzData]="selectedAdvice.diseases" nzSize="middle">
+                <thead>
+                    <tr>
+                        <th>Maladie</th>
+                        <th>Symptômes</th>
+                        <th>Traitement</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let disease of selectedAdvice.diseases">
+                        <td>{{ disease.name }}</td>
+                        <td>{{ disease.symptoms }}</td>
+                        <td>{{ disease.treatment }}</td>
+                    </tr>
+                </tbody>
+            </nz-table>
+        </div>
+        <div class="map-card">
+            <h2>Localisation</h2>
+            <div leaflet [leafletOptions]="mapOptions" [leafletLayers]="markerLayers"></div>
+        </div>
+    </div>
+    <ng-template #noAdvice>
+        <nz-result nzStatus="info" nzTitle="Aucun Conseil Disponible"
+            nzSubTitle="Veuillez sélectionner un produit et une localité."></nz-result>
+    </ng-template>
+</div>

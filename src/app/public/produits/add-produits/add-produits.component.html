@@ -1,0 +1,96 @@
+<div class="container-fluid py-4">
+    <h2 class="mb-4">Ajouter un Nouveau Produit</h2>
+    <nz-card class="shadow-sm">
+        <form nz-form [formGroup]="produitForm">
+            <nz-form-item>
+                <nz-form-label [nzNoColon]="true" [nzLabelAlign]="'left'" [nzSpan]="4" nzRequired>Nom du
+                    Produit</nz-form-label>
+                <nz-form-control nzErrorTip="Entrez un nom (min 2 caractères)">
+                    <input style="background-color: #f1f2f5;" nz-input formControlName="nom" placeholder="Ex. Mil" />
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label [nzNoColon]="true" [nzLabelAlign]="'left'" [nzSpan]="4"
+                    nzRequired>Catégorie</nz-form-label>
+                <nz-form-control nzErrorTip="Veuillez sélectionner une catégorie">
+                    <nz-select formControlName="categorie" nzPlaceHolder="Choisir une catégorie">
+                        <nz-option *ngFor="let categorie of categories" [nzValue]="categorie"
+                            [nzLabel]="categorie"></nz-option>
+                    </nz-select>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label [nzNoColon]="true" [nzLabelAlign]="'left'" [nzSpan]="4"
+                    nzRequired>Quantité</nz-form-label>
+                <nz-form-control nzErrorTip="Entrez une quantité valide (ex. 500 ou 500 kg)">
+                    <input nz-input style="background-color: #f1f2f5;" formControlName="quantite"
+                        placeholder="Ex. 500 kg" />
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label [nzNoColon]="true" [nzLabelAlign]="'left'" [nzSpan]="4" nzRequired>Prix Unitaire
+                    (FCFA)</nz-form-label>
+                <nz-form-control nzErrorTip="Entrez un prix positif">
+                    <input nz-input style="background-color: #f1f2f5;" style="background-color: #f1f2f5;" type="number"
+                        formControlName="prix" placeholder="Ex. 25000" />
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label [nzNoColon]="true" [nzLabelAlign]="'left'" [nzSpan]="4"
+                    nzRequired>Localité</nz-form-label>
+                <nz-form-control nzErrorTip="Veuillez sélectionner une localité">
+                    <nz-select formControlName="localite" nzPlaceHolder="Choisir une localité">
+                        <nz-option *ngFor="let loc of localites" [nzValue]="loc.name" [nzLabel]="loc.name"></nz-option>
+                    </nz-select>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label [nzNoColon]="true" [nzLabelAlign]="'left'" [nzSpan]="4"
+                    nzRequired>Description</nz-form-label>
+                <nz-form-control nzErrorTip="Entrez une description (min 10 caractères)">
+                    <textarea style="background-color: #f1f2f5;" nz-input formControlName="description"
+                        placeholder="Ex. Mil de haute qualité..." rows="4"></textarea>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label [nzNoColon]="true" [nzLabelAlign]="'left'" [nzSpan]="4" nzRequired>URL de
+                    l'Image</nz-form-label>
+                <nz-form-control nzErrorTip="Entrez une URL d'image valide (jpg, png, gif)">
+                    <input nz-input style="background-color: #f1f2f5;" formControlName="image"
+                        placeholder="Ex. https://example.com/image.jpg" />
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label [nzNoColon]="true" [nzLabelAlign]="'left'" [nzSpan]="4" [nzNoColon]="true"
+                    [nzLabelAlign]="'left'" [nzSpan]="4" nzRequired>Vendeur</nz-form-label>
+                <nz-form-control nzErrorTip="Entrez un nom de vendeur (min 3 caractères)">
+                    <input style="background-color: #f1f2f5;" nz-input formControlName="vendeur"
+                        placeholder="Ex. Amadou Traoré" />
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label [nzNoColon]="true" [nzLabelAlign]="'left'" [nzSpan]="4" [nzNoColon]="true"
+                    [nzLabelAlign]="'left'" [nzSpan]="4" nzRequired>Date de Publication</nz-form-label>
+                <nz-form-control nzErrorTip="Veuillez sélectionner une date">
+                    <nz-date-picker formControlName="datePublication" nzFormat="yyyy-MM-dd"
+                        style="width: 100%;"></nz-date-picker>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label [nzNoColon]="true" [nzLabelAlign]="'left'" [nzSpan]="4" nzRequired>Unité</nz-form-label>
+                <nz-form-control nzErrorTip="Veuillez sélectionner une unité">
+                    <nz-select formControlName="unite" nzPlaceHolder="Choisir une unité">
+                        <nz-option *ngFor="let unite of unites" [nzValue]="unite" [nzLabel]="unite"></nz-option>
+                    </nz-select>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-control>
+                    <button class="m-3" nz-button nzType="primary" [disabled]="produitForm.invalid">Ajouter</button>
+                    <button nz-button nzType="default" nzDanger class="ms-2"
+                        [routerLink]="['/produits']">Annuler</button>
+                </nz-form-control>
+            </nz-form-item>
+        </form>
+    </nz-card>
+</div>

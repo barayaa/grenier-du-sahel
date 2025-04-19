@@ -33,7 +33,24 @@ export const ROUTES: SideNavInterface[] = [
     iconType: 'nzIcon',
     iconTheme: 'outline',
     icon: 'shop',
-    submenu: [],
+    submenu: [
+      {
+        path: 'public/cartographie/production',
+        title: 'Production',
+        iconType: 'nzIcon',
+        iconTheme: 'outline',
+        icon: 'shop',
+        submenu: [],
+      },
+      {
+        path: 'public/cartographie/stockage',
+        title: 'Stockage',
+        iconType: 'nzIcon',
+        iconTheme: 'outline',
+        icon: 'fund-view',
+        submenu: [],
+      },
+    ],
   },
 
   {

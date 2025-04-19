@@ -1,0 +1,68 @@
+<div class="store-details-page">
+    <div class="header-section">
+        <button nz-button nzType="text" nzSize="large" routerLink="/stores" class="back-btn">
+            <i nz-icon nzType="arrow-left" nzTheme="outline"></i> Retour
+        </button>
+        <h1 class="page-title" *ngIf="store">{{ store.name }}</h1>
+        <span class="region-tag" *ngIf="store">{{ store.locality?.parent?.parent?.parent?.name || 'Région non définie'
+            }}</span>
+    </div>
+    <div class="content-section" @fadeIn>
+        <ng-container *ngIf="store; else notFound">
+            <div class="info-card">
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">Localité</span>
+                        <span class="info-value">{{ store.locality?.name || 'Non défini' }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Commune</span>
+                        <span class="info-value">{{ store.locality?.parent?.name || 'Non défini' }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Département</span>
+                        <span class="info-value">{{ store.locality?.parent?.parent?.name || 'Non défini' }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Coordonnées</span>
+                        <span class="info-value">
+                            <i nz-icon nzType="environment" nzTheme="outline"></i>
+                            {{ store.latitude }}, {{ store.longitude }}
+                        </span>
+                    </div>
+                </div>
+                <div class="inventory-section">
+                    <h3>Stockage</h3>
+                    <nz-table [nzData]="store.inventory" nzSize="middle">
+                        <thead>
+                            <tr>
+                                <th>Article</th>
+                                <th>Quantité</th>
+                                <th>Unité</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of store.inventory">
+                                <td>{{ item.itemName }}</td>
+                                <td>{{ item.quantity }}</td>
+                                <td>{{ item.unit }}</td>
+                            </tr>
+                        </tbody>
+                    </nz-table>
+                </div>
+            </div>
+            <div class="map-card">
+                <div leaflet [leafletOptions]="mapOptions" [leafletLayers]="markerLayers"></div>
+            </div>
+        </ng-container>
+        <ng-template #notFound>
+            <div class="not-found-card">
+                <nz-result nzStatus="404" nzTitle="Magasin Introuvable" nzSubTitle="Désolé, ce magasin n'existe pas.">
+                    <div nz-result-extra>
+                        <button nz-button nzType="primary" routerLink="/stores">Retour à la Liste</button>
+                    </div>
+                </nz-result>
+            </div>
+        </ng-template>
+    </div>
+</div>

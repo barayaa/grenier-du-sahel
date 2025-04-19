@@ -1,21 +1,27 @@
 <div class="container-fluid py-4">
     <h2 class="mb-4">Marketplace - Produits</h2>
-    <nz-card class="shadow-sm ">
+    <nz-card class="shadow-sm">
         <div class="row mb-4">
             <div class="col-md-4">
-                <nz-select nzSize="large" nzPlaceHolder="Catégorie" style="width: 100%;">
+                <nz-select nzPlaceHolder="Catégorie" style="width: 100%;">
                     <nz-option nzValue="céréales" nzLabel="Céréales"></nz-option>
                     <nz-option nzValue="légumineuses" nzLabel="Légumineuses"></nz-option>
                 </nz-select>
             </div>
-            <div class="col-md-8">
-                <nz-input-group nzSearch nzSize="large" [nzAddOnAfter]="searchButton">
+            <div class="col-md-4">
+                <nz-input-group nzSearch>
                     <input type="text" style="background-color: #f1f2f5;" nz-input
                         placeholder="Rechercher un produit..." />
                 </nz-input-group>
-                <ng-template #searchButton>
+                <!-- <ng-template #searchButton>
                     <button nz-button nzType="primary" nzSearch><i nz-icon nzType="search"></i></button>
-                </ng-template>
+                </ng-template> -->
+            </div>
+            <div class="col-md-4 text-center">
+                <button nz-button nzType="primary" style="background-color: green; border: none;"
+                    [routerLink]="['/public/produits/new']">
+                    <i nz-icon nzType="plus"></i> Ajouter un Produit
+                </button>
             </div>
         </div>
     </nz-card>

@@ -2,7 +2,6 @@
     <div class="row mb-5" @fadeIn>
         <div class="col-md-12">
             <nz-card class="shadow-card" nzTitle="Gestion des Types de Profils">
-                <!-- Barre de Recherche et Bouton Ajouter -->
                 <div class="mb-3">
                     <div class="row g-3 align-items-center">
                         <div class="col-md-6">
@@ -12,14 +11,14 @@
                             </nz-input-group>
                         </div>
                         <div class="col-md-6 text-end">
-                            <button nz-button nzType="primary" (click)="showAddProfileTypeModal()">
+                            <button style="background-color: green;" nz-button nzType="primary"
+                                (click)="showAddProfileTypeModal()">
                                 <i nz-icon nzType="plus" nzTheme="outline"></i> Ajouter un Type de Profil
                             </button>
                         </div>
                     </div>
                 </div>
 
-                <!-- Tableau des Types de Profils -->
                 <nz-table #profileTypesTable [nzData]="filteredProfileTypes" nzBordered>
                     <thead>
                         <tr>
@@ -35,7 +34,7 @@
                             <td>{{ profileType.description }}</td>
                             <td>
                                 <nz-tag *ngFor="let permission of profileType.permissions"
-                                    [nzColor]="permission.enabled ? 'blue' : 'default'">
+                                    [nzColor]="permission.enabled ? 'orange' : 'default'">
                                     {{ permission.name }}
                                 </nz-tag>
                             </td>
@@ -63,7 +62,6 @@
         </div>
     </div>
 
-    <!-- Modal pour Ajouter/Modifier un Type de Profil -->
     <nz-modal [(nzVisible)]="isProfileTypeModalVisible"
         [nzTitle]="isEditingProfileType ? 'Modifier le Type de Profil' : 'Ajouter un Type de Profil'"
         (nzOnCancel)="handleProfileTypeCancel()" (nzOnOk)="handleProfileTypeOk()"
@@ -97,7 +95,6 @@
         </form>
     </nz-modal>
 
-    <!-- Modal pour Attribuer un Type de Profil à un Utilisateur -->
     <nz-modal [(nzVisible)]="isAssignProfileModalVisible" nzTitle="Attribuer un Type de Profil"
         (nzOnCancel)="handleAssignCancel()" (nzOnOk)="handleAssignOk()" [nzOkDisabled]="!selectedUser">
         <nz-form-item>

@@ -18,3 +18,15 @@ nz-checkbox-wrapper {
     flex-direction: column;
     gap: 8px;
 }
+
+
+::ng-deep .ant-table-thead>tr>th {
+    color: white !important;
+    font-weight: bold !important;
+    background-color: green !important;
+}
+
+button[nz-button][nzType="primary"]:hover {
+    background-color: orange;
+    border-color: orange;
+}

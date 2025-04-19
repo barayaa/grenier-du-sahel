@@ -1,1 +1,159 @@
-<p>magasin works!</p>
+<div class="stores-container">
+    <div class="stores-header" @fadeIn>
+        <nz-card class="shadow-card" nzTitle="Gestion des Magasins">
+            <div class="actions">
+                <nz-input-group nzSearch nzSize="large" class="search-bar">
+                    <input nz-input placeholder="Rechercher un magasin" [(ngModel)]="searchQuery"
+                        (ngModelChange)="applyFilters()" />
+                </nz-input-group>
+                <button nz-button nzType="primary" nzSize="large" (click)="showAddModal()">
+                    <i nz-icon nzType="plus" nzTheme="outline"></i> Ajouter un Magasin
+                </button>
+            </div>
+            <nz-table #storesTable [nzData]="filteredStores" nzBordered>
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Localité</th>
+                        <th>Région</th>
+                        <th>Stock</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let store of storesTable.data">
+                        <td>{{ store.name }}</td>
+                        <td>{{ store.locality?.name || 'Non défini' }}</td>
+                        <td>{{ store.locality?.parent?.parent?.parent?.name || 'Non défini' }}</td>
+                        <td>
+                            <nz-tag *ngFor="let item of store.inventory" nzColor="blue">
+                                {{ item.itemName }}: {{ item.quantity }} {{ item.unit }}
+                            </nz-tag>
+                        </td>
+                        <td class="actions-cell">
+                            <a [routerLink]="['/private/magasin_detail/', store.id]" nz-button nzType="default"
+                                nzShape="circle" nz-tooltip [nzTooltipTitle]="'Détails'">
+                                <i nz-icon nzType="info" nzTheme="outline"></i>
+                            </a>
+                            <button (click)="showEditModal(store)" nz-button nzType="default" nzShape="circle"
+                                nz-tooltip [nzTooltipTitle]="'Modifier'">
+                                <i nz-icon nzType="edit" nzTheme="outline"></i>
+                            </button>
+                            <button nz-button nzType="default" nzShape="circle" nz-popconfirm
+                                nzPopconfirmTitle="Supprimer ce magasin ?" (nzOnConfirm)="deleteStore(store)"
+                                (nzOnCancel)="cancelDelete()" nz-tooltip [nzTooltipTitle]="'Supprimer'">
+                                <i nz-icon nzType="delete" nzTheme="outline"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </nz-table>
+        </nz-card>
+    </div>
+
+    <!-- Modal pour Ajout/Modification -->
+    <nz-modal [(nzVisible)]="isModalVisible" [nzTitle]="isEditing ? 'Modifier le Magasin' : 'Ajouter un Magasin'"
+        (nzOnCancel)="handleModalCancel()" (nzOnOk)="handleModalOk()" [nzOkDisabled]="!storeForm?.valid">
+        <form nz-form #storeForm="ngForm" (ngSubmit)="handleModalOk()">
+            <nz-form-item>
+                <nz-form-label nzRequired>Nom du Magasin</nz-form-label>
+                <nz-form-control nzErrorTip="Entrez un nom">
+                    <input nz-input name="name" [(ngModel)]="currentStore.name" required />
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label nzRequired>Région</nz-form-label>
+                <nz-form-control nzErrorTip="Sélectionnez une région">
+                    <nz-select [(ngModel)]="selectedRegion" name="region" (ngModelChange)="updateDepartments()"
+                        nzPlaceHolder="Sélectionner une région" required>
+                        <nz-option *ngFor="let region of regions" [nzValue]="region"
+                            [nzLabel]="region.name"></nz-option>
+                    </nz-select>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label nzRequired>Département</nz-form-label>
+                <nz-form-control nzErrorTip="Sélectionnez un département">
+                    <nz-select [(ngModel)]="selectedDepartment" name="department" (ngModelChange)="updateCommunes()"
+                        nzPlaceHolder="Sélectionner un département" [nzDisabled]="!selectedRegion" required>
+                        <nz-option *ngFor="let dept of departments" [nzValue]="dept" [nzLabel]="dept.name"></nz-option>
+                    </nz-select>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label nzRequired>Commune</nz-form-label>
+                <nz-form-control nzErrorTip="Sélectionnez une commune">
+                    <nz-select [(ngModel)]="selectedCommune" name="commune" (ngModelChange)="updateLocalities()"
+                        nzPlaceHolder="Sélectionner une commune" [nzDisabled]="!selectedDepartment" required>
+                        <nz-option *ngFor="let commune of communes" [nzValue]="commune"
+                            [nzLabel]="commune.name"></nz-option>
+                    </nz-select>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label nzRequired>Localité</nz-form-label>
+                <nz-form-control nzErrorTip="Sélectionnez une localité">
+                    <nz-select [(ngModel)]="currentStore.locality" name="locality"
+                        nzPlaceHolder="Sélectionner une localité" [nzDisabled]="!selectedCommune" required>
+                        <nz-option *ngFor="let locality of localities" [nzValue]="locality"
+                            [nzLabel]="locality.name"></nz-option>
+                    </nz-select>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label nzRequired>Latitude</nz-form-label>
+                <nz-form-control nzErrorTip="Entrez une latitude valide">
+                    <input nz-input name="latitude" [(ngModel)]="currentStore.latitude" type="number" step="0.000001"
+                        required />
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label nzRequired>Longitude</nz-form-label>
+                <nz-form-control nzErrorTip="Entrez une longitude valide">
+                    <input nz-input name="longitude" [(ngModel)]="currentStore.longitude" type="number" step="0.000001"
+                        required />
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label>Stock</nz-form-label>
+                <nz-form-control>
+                    <div class="inventory-input">
+                        <input nz-input placeholder="Article (ex. Oignons)" [(ngModel)]="newItem.itemName"
+                            name="itemName" />
+                        <input nz-input type="number" placeholder="Quantité" [(ngModel)]="newItem.quantity"
+                            name="itemQuantity" />
+                        <nz-select [(ngModel)]="newItem.unit" name="itemUnit">
+                            <nz-option nzValue="kg" nzLabel="kg"></nz-option>
+                            <nz-option nzValue="tonnes" nzLabel="tonnes"></nz-option>
+                        </nz-select>
+                        <button nz-button nzType="primary" (click)="addItemToInventory()"
+                            [disabled]="!newItem.itemName || newItem.quantity <= 0">Ajouter</button>
+                    </div>
+                    <nz-table [nzData]="currentStore.inventory" nzSize="small" class="inventory-table">
+                        <thead>
+                            <tr>
+                                <th>Article</th>
+                                <th>Quantité</th>
+                                <th>Unité</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of currentStore.inventory; let i = index">
+                                <td>{{ item.itemName }}</td>
+                                <td>{{ item.quantity }}</td>
+                                <td>{{ item.unit }}</td>
+                                <td>
+                                    <button nz-button nzType="danger" nzShape="circle"
+                                        (click)="removeItemFromInventory(i)">
+                                        <i nz-icon nzType="delete" nzTheme="outline"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </nz-table>
+                </nz-form-control>
+            </nz-form-item>
+        </form>
+    </nz-modal>
+</div>

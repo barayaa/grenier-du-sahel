@@ -21,6 +21,7 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 
 import { PublicRoutingModule } from './public-routing.module';
 import { ProduitsComponent } from './produits/produits.component';
@@ -31,6 +32,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet'; // Import LeafletModule
 import { ProduitsDetailsComponent } from './produits/produits-details/produits-details.component';
 import { DemandesDetailsComponent } from './demandes/demandes-details/demandes-details.component';
+import { AddDemandesComponent } from './demandes/add-demandes/add-demandes.component';
+import { AddProduitsComponent } from './produits/add-produits/add-produits.component';
+import { CartographieStockageComponent } from './cartographie-stockage/cartographie-stockage.component';
 const antdModule = [
   NzButtonModule,
   NzCardModule,
@@ -52,7 +56,7 @@ const antdModule = [
   NzInputModule,
   NzSelectModule,
   NzIconModule,
-  FormsModule,
+  NzDatePickerModule,
 ];
 
 @NgModule({
@@ -62,12 +66,16 @@ const antdModule = [
     DemandesComponent,
     CartographieComponent,
     ProduitsDetailsComponent,
+    AddProduitsComponent,
     DemandesDetailsComponent,
+    AddDemandesComponent,
+    CartographieStockageComponent,
   ],
   imports: [
     CommonModule,
     ...antdModule,
     ReactiveFormsModule,
+    FormsModule,
     LeafletModule,
     PublicRoutingModule,
   ],

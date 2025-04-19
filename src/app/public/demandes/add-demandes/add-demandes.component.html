@@ -1,0 +1,42 @@
+<div class="container-fluid py-4">
+    <h2 class="mb-4">Ajouter une Nouvelle Demande</h2>
+    <nz-card class="shadow-sm">
+        <form nz-form [formGroup]="demandeForm" (ngSubmit)="submitForm()">
+            <nz-form-item>
+                <nz-form-label nzRequired>Produit</nz-form-label>
+                <nz-form-control nzErrorTip="Veuillez sélectionner un produit">
+                    <nz-select formControlName="produit" nzPlaceHolder="Choisir un produit">
+                        <nz-option *ngFor="let produit of produits" [nzValue]="produit" [nzLabel]="produit"></nz-option>
+                    </nz-select>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label nzRequired>Quantité</nz-form-label>
+                <nz-form-control nzErrorTip="Entrez une quantité valide (ex. 500 ou 500 kg)">
+                    <input nz-input formControlName="quantite" placeholder="Ex. 500 kg" />
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label nzRequired>Date</nz-form-label>
+                <nz-form-control nzErrorTip="Veuillez sélectionner une date">
+                    <nz-date-picker formControlName="date" nzFormat="yyyy-MM-dd" style="width: 100%;"></nz-date-picker>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label nzRequired>Statut</nz-form-label>
+                <nz-form-control nzErrorTip="Veuillez sélectionner un statut">
+                    <nz-select formControlName="statut" nzPlaceHolder="Choisir un statut">
+                        <nz-option *ngFor="let statut of statuts" [nzValue]="statut" [nzLabel]="statut"></nz-option>
+                    </nz-select>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-control>
+                    <button class="m-3" nz-button nzType="primary" [disabled]="demandeForm.invalid">Ajouter</button>
+                    <button nz-button nzType="da" nzDanger class="ms-2"
+                        [routerLink]="['/public/demandes']">Annuler</button>
+                </nz-form-control>
+            </nz-form-item>
+        </form>
+    </nz-card>
+</div>

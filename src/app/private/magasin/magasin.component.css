@@ -1,0 +1,65 @@
+/* .stores-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px;
+    background: #f5f7fa;
+    min-height: 100vh;
+} */
+
+.stores-header {
+    margin-bottom: 24px;
+}
+
+.shadow-card {
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.search-bar {
+    max-width: 400px;
+}
+
+.actions-cell {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+
+.inventory-table {
+    margin-top: 16px;
+}
+
+.inventory-input {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+@media (max-width: 768px) {
+    .stores-container {
+        padding: 16px;
+    }
+
+    .actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .search-bar {
+        max-width: 100%;
+    }
+
+    .inventory-input {
+        flex-direction: column;
+    }
+}

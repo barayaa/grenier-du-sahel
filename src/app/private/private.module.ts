@@ -21,6 +21,7 @@ import { NzCalendarModule } from 'ng-zorro-antd/calendar';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { NzFormModule } from 'ng-zorro-antd/form';
+
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzIconModule } from 'ng-zorro-antd/icon';
@@ -36,6 +37,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { MarcherInfoComponent } from './marche/marcher-info/marcher-info.component';
+import { MagasinDetailsComponent } from './magasin/magasin-details/magasin-details.component';
+import { MagasinComponent } from './magasin/magasin.component';
+import { ConseilAgricoleComponent } from './conseil-agricole/conseil-agricole.component';
 const antdModule = [
   NzButtonModule,
   NzCardModule,
@@ -72,6 +76,9 @@ const antdModule = [
     PrivateDashboardComponent,
     UserProfileComponent,
     MarcherInfoComponent,
+    MagasinComponent,
+    MagasinDetailsComponent,
+    ConseilAgricoleComponent,
   ],
   imports: [
     CommonModule,

@@ -52,40 +52,7 @@ export class MarcheComponent {
       longitude: 8.9884,
     },
   ];
-  // markets: any[] = [
-  //   {
-  //     name: 'Marché de Niamey',
-  //     locality: {
-  //       name: 'Localité 1',
-  //       parent: {
-  //         name: 'Commune 1',
-  //         parent: {
-  //           name: 'Département 1',
-  //           parent: { name: 'Niamey' },
-  //         },
-  //       },
-  //     },
-  //     latitude: 13.5137,
-  //     longitude: 2.1098,
-  //   },
-  //   {
-  //     name: 'Marché de Zinder',
-  //     locality: {
-  //       name: 'Localité Z1',
-  //       parent: {
-  //         name: 'Commune Z1',
-  //         parent: {
-  //           name: 'Département Z1',
-  //           parent: { name: 'Zinder' },
-  //         },
-  //       },
-  //     },
-  //     latitude: 13.8053,
-  //     longitude: 8.9884,
-  //   },
-  // ];
 
-  // Données fictives des découpages
   regions: any[] = [
     {
       name: 'Niamey',

@@ -11,6 +11,7 @@ import { UserProfileComponent } from './user-profile/user-profile.component';
 import { MagasinComponent } from './magasin/magasin.component';
 import { ConseilAgricoleComponent } from './conseil-agricole/conseil-agricole.component';
 import { MarcherInfoComponent } from './marche/marcher-info/marcher-info.component';
+import { MagasinDetailsComponent } from './magasin/magasin-details/magasin-details.component';
 
 const routes: Routes = [
   {
@@ -118,6 +119,14 @@ const routes: Routes = [
     component: MagasinComponent,
     data: {
       title: 'Magasin',
+      headerDisplay: 'none',
+    },
+  },
+  {
+    path: 'magasin_detail/:id',
+    component: MagasinDetailsComponent,
+    data: {
+      title: 'Magasin Details',
       headerDisplay: 'none',
     },
   },
